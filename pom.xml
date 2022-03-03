@@ -49,16 +49,6 @@
                     </wsdlUrls>
                     <keep>true</keep>
                     <packageName>com.atanava.soap</packageName>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                        </manifest>
-                    </archive>
-
-<!--                    <additionalClasspathElements>-->
-<!--                        <additionalClasspathElement>target/generated-sources/wsimport/com/atanava/soap</additionalClasspathElement>-->
-<!--                        <additionalClasspathElement>src/main/resources/handler.xml</additionalClasspathElement>-->
-<!--                    </additionalClasspathElements>-->
                 </configuration>
             </plugin>
         </plugins>

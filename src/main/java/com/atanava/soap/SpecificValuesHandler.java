@@ -17,8 +17,8 @@ public class SpecificValuesHandler implements LogicalHandler<LogicalMessageConte
 
     @Override
     public boolean handleMessage(LogicalMessageContext ctx) {
-        Boolean outboundProperty = (Boolean)
-            ctx.get (MessageContext.MESSAGE_OUTBOUND_PROPERTY);
+        Boolean outboundProperty = (Boolean) ctx.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
+
         if (outboundProperty) {
             System.out.println("\nOutbound message:");
         } else {
@@ -26,28 +26,33 @@ public class SpecificValuesHandler implements LogicalHandler<LogicalMessageConte
         }
 
         LogicalMessage msg = ctx.getMessage();
-        GetPostingsResponse payload = (GetPostingsResponse) msg.getPayload();
-        List<PostingType> postings = payload.getPosting();
 
-        postings.forEach(p -> {
-            p.board.specificValues.forEach(v -> v.value = v.value.toUpperCase());
-            String xmlString = null;
-            try {
-                JAXBContext context = JAXBContext.newInstance(PostingType.class);
-                Marshaller marshaller = context.createMarshaller();
-                marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(ObjectFactory.class);
+            Object payload = msg.getPayload(jaxbContext);
 
-                JAXBElement<PostingType> postingType =
-                    new JAXBElement<>(new QName("", "postingType"), PostingType.class, p);
+            if (payload instanceof GetPostingsResponse) {
+                List<PostingType> postings = ((GetPostingsResponse) payload).getPosting();
 
-                StringWriter sw = new StringWriter();
-                marshaller.marshal(postingType, sw);
-                xmlString = sw.toString();
-            } catch (JAXBException e) {
-                e.printStackTrace();
+                for (PostingType posting : postings) {
+                    posting.board.specificValues.forEach(v -> v.value = v.value.toUpperCase());
+
+                    JAXBContext context = JAXBContext.newInstance(PostingType.class);
+                    Marshaller marshaller = context.createMarshaller();
+                    marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+
+                    JAXBElement<PostingType> postingType =
+                        new JAXBElement<>(new QName("", "postingType"), PostingType.class, posting);
+
+                    StringWriter sw = new StringWriter();
+                    marshaller.marshal(postingType, sw);
+
+                    System.out.println(sw);
+                }
             }
-            System.out.println(xmlString);
-        });
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
 
         return true;
     }
