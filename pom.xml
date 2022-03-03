@@ -6,14 +6,16 @@
 
     <groupId>com.atanava</groupId>
     <artifactId>soap-training</artifactId>
+    <packaging>jar</packaging>
+
     <version>1.0-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <jakarta.version>3.0.1</jakarta.version>
-        <jaxws-rt.version>3.0.2</jaxws-rt.version>
-        <jaxws-ri.version>3.0.2</jaxws-ri.version>
+        <jaxws-rt.version>3.0.1</jaxws-rt.version>
+        <jaxws-ri.version>3.0.1</jaxws-ri.version>
     </properties>
 
     <dependencies>
@@ -40,14 +42,23 @@
             <plugin>
                 <groupId>com.sun.xml.ws</groupId>
                 <artifactId>jaxws-maven-plugin</artifactId>
-                <version>3.0.2</version>
+                <version>3.0.1</version>
                 <configuration>
                     <wsdlUrls>
                         <wsdlUrl>https://jws.beta.equest.com/soap/2.0?wsdl</wsdlUrl>
                     </wsdlUrls>
                     <keep>true</keep>
-                    <packageName>com.atanava.soap.ws.client.generated</packageName>
-                    <sourceDestDir>src/main/java</sourceDestDir>
+                    <packageName>com.atanava.soap</packageName>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                        </manifest>
+                    </archive>
+
+<!--                    <additionalClasspathElements>-->
+<!--                        <additionalClasspathElement>target/generated-sources/wsimport/com/atanava/soap</additionalClasspathElement>-->
+<!--                        <additionalClasspathElement>src/main/resources/handler.xml</additionalClasspathElement>-->
+<!--                    </additionalClasspathElements>-->
                 </configuration>
             </plugin>
         </plugins>
