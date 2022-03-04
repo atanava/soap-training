@@ -7,8 +7,7 @@ import java.util.List;
 
 public class Client {
 
-    public static void main(String[] args) {
-
+    public List<PostingType> getPostings(String username, String password, String requisition) {
         EQuestServiceService service = new EQuestServiceService();
         EQuest port = service.getEQuestServicePort();
 
@@ -17,11 +16,6 @@ public class Client {
         List<Handler> handlerChain = List.of(new SpecificValuesHandler());
         binding.setHandlerChain(handlerChain);
 
-        String username = args[0];
-        String password = args[1];
-        String requisition = args[2];
-
-        List<PostingType> postings = port.getPostings(username, password, requisition);
+        return port.getPostings(username, password, requisition);
     }
-
 }
