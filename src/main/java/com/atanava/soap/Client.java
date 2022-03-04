@@ -7,21 +7,14 @@ import java.util.List;
 
 public class Client {
 
-    public static void main(String[] args) {
+    private final EQuest port;
 
-        EQuestServiceService service = new EQuestServiceService();
-        EQuest port = service.getEQuestServicePort();
-
-        BindingProvider bp = (BindingProvider) port;
-        Binding binding = bp.getBinding();
-        List<Handler> handlerChain = List.of(new SpecificValuesHandler());
-        binding.setHandlerChain(handlerChain);
-
-        String username = args[0];
-        String password = args[1];
-        String requisition = args[2];
-
-        List<PostingType> postings = port.getPostings(username, password, requisition);
+    public Client(EQuest port) {
+        this.port = port;
     }
 
+    public List<PostingType> getPostings(String username, String password, String requisition) {
+
+        return port.getPostings(username, password, requisition);
+    }
 }
